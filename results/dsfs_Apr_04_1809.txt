@@ -1,0 +1,2 @@
+Subject Num	dsfs	Block Order	1	date	Apr_04_1809
+Trialnumber	Winpos	Losspos	Side	Order	Choice	RT	Choiceside	Winchosen	LossChosen	TotalMoney	Fixonset	Choiceonset	Monitoronset	Winresonset	Lossresonset	stima	stimb	Blocknum

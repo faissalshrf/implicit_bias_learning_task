@@ -1,0 +1,2 @@
+Subject Num	2	Block Order	2	date	Apr_04_1459
+Trialnumber	Winpos	Losspos	Side	Order	Choice	RT	Choiceside	Winchosen	LossChosen	TotalMoney	Fixonset	Choiceonset	Monitoronset	Winresonset	Lossresonset	stima	stimb	Blocknum
