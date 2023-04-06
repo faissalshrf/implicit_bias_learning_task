@@ -12,7 +12,7 @@ available parameters.
 
 # Import modules
 from psychopy import visual
-from psychopy import core, event
+from psychopy import core, pip event
 import numpy as np
 
 import pylinkwrapper  # Here's the special one
