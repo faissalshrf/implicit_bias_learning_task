@@ -51,6 +51,7 @@ maxjit=6        # max jitter duration in secs
 stimlets=['F','G','h','K','o','b','f','j','i']      # letters to be used as stimuli
 #stimlets=['F','G']      # letters to be used as stimuli
 blocknum=1      # counter for blocks
+greyde=0        #grey degree of the circle at the top left corner for epoching
 
 
 #if len(stimlets) < len(blocklength)*2:
@@ -145,10 +146,11 @@ win.mouseVisible = True
 stima = visual.TextStim(win,text='a', units='deg', color='white',font='agathodaimon',height=stimsize)
 stimb = visual.TextStim(win,text='b', units='deg', color='white',font='agathodaimon',height=stimsize)
 choicebox = visual.ShapeStim(win, units='deg', lineWidth=4, lineColor=[0.8824, 0.6392, 0.4432], vertices=((-boxwidth, -boxwidth), (-boxwidth, boxwidth), (boxwidth, boxwidth), (boxwidth, -boxwidth)))
-winmes=visual.TextStim(win,text='win',colorSpace='rgb',color=[0.0, 1.0, 0.0])
-lossmes=visual.TextStim(win,text='loss',colorSpace='rgb',color=[1.0, 0.0 ,0.0])
+winmes = visual.TextStim(win,text='win',colorSpace='rgb',color=[0.0, 1.0, 0.0])
+lossmes = visual.TextStim(win,text='loss',colorSpace='rgb',color=[1.0, 0.0 ,0.0])
 fixation = visual.TextStim(win,text='X',color='white')
-tottext=visual.TextStim(win,text=u'Total \xa3'+ str(round(totmon,2)),units='deg', colorSpace='rgb', color=[0.8824, 0.6392, 0.4432],height=1, pos=(0.0,-5.5))
+tottext = visual.TextStim(win,text=u'Total \xa3'+ str(round(totmon,2)),units='deg', colorSpace='rgb', color=[0.8824, 0.6392, 0.4432],height=1, pos=(0.0,-5.5))
+circle = visual.Circle(win, units='deg', radius=3, pos=(-28.5,18), colorSpace='rgb255', color=greyde)
 
 #Initiate eye-tracker link and open EDF
 if usetrack:
@@ -195,6 +197,9 @@ def pauseclick(text, win, mouse, pos=(0.0, 0.0), height=1.2, color=[1, 1, 1], wr
     #message.draw()
     #win.flip()
     while True not in (left_press, right_press):
+        greyde = 0
+        circle.setColor(greyde)
+        circle.draw()
         message.draw()
         win.flip()
         (left_press,middle_press,right_press)=mouse.getPressed()
@@ -239,7 +244,10 @@ for thistrial in trialhandle:
     
     trialhandle.data.add('stima',stima.text)
     trialhandle.data.add('stimb',stimb.text)
-    # present fixation cross for 500ms
+    # present fixation cross for 1000ms (original one is 500ms)
+    greyde = 40
+    circle.setColor(greyde)
+    circle.draw()
     fixation.draw()
     tottext.draw()
     fixonset=taskclock.getTime()
@@ -258,6 +266,9 @@ for thistrial in trialhandle:
         stimb.setPos([leftstimx,stimy])
         stima.setPos([rightstimx,stimy])
         
+    greyde = 80
+    circle.setColor(greyde)
+    circle.draw()
     fixation.draw()
     tottext.draw()
     stima.draw()
@@ -349,6 +360,9 @@ for thistrial in trialhandle:
         
     # present participant choice
   
+    greyde = 120
+    circle.setColor(greyde)
+    circle.draw()
     fixation.draw()
     tottext.draw()
     choicebox.draw()
@@ -379,7 +393,9 @@ for thistrial in trialhandle:
                 winmes.setPos([rightstimx,outy])
             else:
                 winmes.setPos([leftstimx,outy])    #option 1 on right
-        
+        greyde = 160
+        circle.setColor(greyde)
+        circle.draw()
         fixation.draw()
         tottext.draw()
         choicebox.draw()
@@ -415,7 +431,9 @@ for thistrial in trialhandle:
             else:                                   #option 1 on right
                 lossmes.setPos([leftstimx,-outy])
             
-        
+        greyde = 200
+        circle.setColor(greyde)
+        circle.draw()        
         fixation.draw()
         tottext.draw()
         choicebox.draw()
@@ -453,7 +471,10 @@ for thistrial in trialhandle:
                 lossmes.setPos([rightstimx,-outy])
             else:                                   #option 1 on right
                 lossmes.setPos([leftstimx,-outy])
-        
+
+        greyde = 200
+        circle.setColor(greyde)
+        circle.draw()
         fixation.draw()
         tottext.draw()
         choicebox.draw()
@@ -489,6 +510,9 @@ for thistrial in trialhandle:
             else:
                 winmes.setPos([leftstimx,outy])    #option 1 on right
         
+        greyde = 160
+        circle.setColor(greyde)
+        circle.draw()        
         fixation.draw()
         tottext.draw()
         choicebox.draw()
