@@ -44,6 +44,9 @@ while tripro==0
     end
 end
 
+
+% proran = [13,12,17,17,14,10,10,14,13];
+% Random = [7,8,8,9,18,20,19,23,8];
 idxpos = 0;
 pro = 0.15;
 PRO = zeros(1,ntrial);
@@ -69,7 +72,7 @@ end
 
 
 idxdif = find(order(1:end-1)~=order(2:end));
-plot(1:idxdif(1), PRO(1:idxdif(1)),'-g','linewidth',3);
+plot(80+1:80+idxdif(1), PRO(1:idxdif(1)),'-g','linewidth',3);
 for i = 1:length(idxdif)
     %xline(idxdif(i));
     hold on
@@ -80,20 +83,52 @@ for i = 1:length(idxdif)
         edpt = idxdif(i+1);
     end
     if mod(i,2)==1 
-        plot(stpt:edpt, PRO(stpt:edpt),'--r','linewidth',3);
+        plot(stpt+80:edpt+80, PRO(stpt:edpt),'--r','linewidth',3);
     else
-        plot(stpt:edpt, PRO(stpt:edpt),'-g','linewidth',3);
+        plot(stpt+80:edpt+80, PRO(stpt:edpt),'-g','linewidth',3);
     end 
 end
+hold on
 ylim([0,1])
 
+
+
         
+%%
+
+idxpb = [201:440];
+winPRO = zeros(1,length(idxpb));
+winPRO([1:13,30:52,181:199,221:240]) = 0.15;
+winPRO([14:29,53:80,161:180,200:220]) = 0.85;
+winPRO([81:160]) = 0.5;
+lossPRO = zeros(1,length(idxpb));
+lossPRO([1:19,50:62,97:111,134:160]) = 0.85;
+lossPRO([20:49,63:96,112:133]) = 0.15;
+lossPRO([161:240]) = 0.5;
+plot(idxpb,winPRO,'-g','linewidth',3);
+hold on
+plot(idxpb,lossPRO,'--r','linewidth',3);
+
+hold on
 
 
+idxpb = [1:40];
+winPRO = zeros(1,length(idxpb));
+winPRO([1:7,22:29]) = 0.15;
+winPRO([8:21,30:40]) = 0.85;
+plot(idxpb,winPRO,'-g','linewidth',3);
+lossPRO = zeros(1,length(idxpb));
+lossPRO([12:18,30:40]) = 0.15;
+lossPRO([1:11,19:29]) = 0.85;
+plot(idxpb+40,lossPRO,'--r','linewidth',3);
 
+xline(40.5,'--k','linewidth',5);
+xline(80.5,'--k','linewidth',5);
+xline(120.5+80,'--k','linewidth',5);
+xline(200.5+80,'--k','linewidth',5);
+xline(280.5+80,'--k','linewidth',5);
 
-
-
+xlim([0,440]);
 
 
 
