@@ -81,15 +81,9 @@ expInfo['expName'] = expName
 
 # import experiment schedule
 if expInfo['Type'] == '1':
-    schedulefile = 'Schedule_10.xlsx'
-    blocklength=[10,10,10]
-elif expInfo['Type'] == '2':
-    schedulefile = 'Schedule_80.xlsx'
-    blocklength=[80,80,80]
-elif expInfo['Type'] == '3':
     schedulefile = 'ScheduleNew.xlsx'
     blocklength=[60,120,80,80,80]
-elif expInfo['Type'] == '4':
+elif expInfo['Type'] == '2':
     schedulefile = 'ScheduleNew_v2.xlsx'
     blocklength=[40,40,120,80,80,80]
 
