@@ -89,7 +89,12 @@ elif expInfo['Type'] == '2':
 elif expInfo['Type'] == '3':
     schedulefile = 'ScheduleNew_short.xlsx'
     blocklength=[5,5,15,10,10,10]
-
+elif expInfo['Type'] == 'A':
+    schedulefile = 'ScheduleNew_v2_TA.xlsx'
+    blocklength=[40,40,120]
+elif expInfo['Type'] == 'B':
+    schedulefile = 'ScheduleNew_v2_TB.xlsx'
+    blocklength=[80,80,80]
 
 Sched = data.importConditions(os.path.join(_thisDir, 'schedules', schedulefile))
 if sum(blocklength) != len(Sched):
@@ -809,8 +814,12 @@ for thistrial in trialhandle:
         stimcount=stimcount+2
         stima.setText(stimlets[stimcount])
         stimb.setText(stimlets[stimcount+1])
-        pauseclick("Well done! You can now take a break. Press either button to continue.", win, mouse)
-        print("User paused the task")
+        if blocknum!=4:
+            pauseclick("Well done! You can now take a break. Press either button to continue.", win, mouse)
+            print("User paused the task")
+        elif blocknum==4:
+            pauseclick("End of phase! You can now feel free to rest and wait for insturctions.",win,mouse)
+            print("User paused the task")
     
 if usetrack:
 #stop tracker
