@@ -159,7 +159,9 @@ winmes = visual.TextStim(win,text='win',colorSpace='rgb',color=[0.0, 1.0, 0.0])
 lossmes = visual.TextStim(win,text='loss',colorSpace='rgb',color=[1.0, 0.0 ,0.0])
 fixation = visual.TextStim(win,text='X',color='white')
 tottext = visual.TextStim(win,text=u'Total \xa3'+ str(round(totmon,2)),units='deg', colorSpace='rgb', color=[0.8824, 0.6392, 0.4432],height=1, pos=(0.0,-5.5))
-circle = visual.Circle(win, units='deg', radius=3, pos=(-28.5,18), colorSpace='rgb255', color=greyde)
+#circle = visual.Circle(win, units='deg', radius=3, pos=(-28.5,18), colorSpace='rgb255', color=greyde) # for 2160x1440 monitor
+#circle = visual.Circle(win, units='norm', radius=0.1, pos=(-0.9,0.9), colorSpace='rgb255', color=greyde)
+circle = visual.Circle(win, units='deg', radius=3, pos=(-25,13), colorSpace='rgb255', color=greyde) #for 1920x1080 monitor
 
 #Initiate eye-tracker link and open EDF
 if usetrack:
