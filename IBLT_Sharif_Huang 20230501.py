@@ -183,7 +183,7 @@ mouse = event.Mouse(visible=False, newPos=None, win=win)
 
 
 #display instructions and wait
-def pauseclick(text, win, mouse, pos=(0.0, 0.0), height=1.2, color=[1, 1, 1], wrap_width=100):
+def pauseclick(text, win, mouse, pos=(0.0, 0.0), height=1.2, color=[1, 1, 1], wrap_width=300):
     """
     A function that displays a message and waits for the participant to click
     either button before continuing.
@@ -197,14 +197,18 @@ def pauseclick(text, win, mouse, pos=(0.0, 0.0), height=1.2, color=[1, 1, 1], wr
         color (list): The color of the text stimulus as an RGB triplet (values between 0 and 1).
     """
     #click = False
+    #event.clearEvents()
     left_press=False
     right_press=False
+    mouse.clickReset()
     win.setColor('black')
     text = re.sub(r'(?<=[.!]) +', '\n\n', text) # add line breaks after periods and exclamation points
     wrapped_text = "\n".join(textwrap.wrap(text, width=wrap_width))
     message = visual.TextStim(win=win, text=wrapped_text, pos=pos, height=height, color=color)
     #message.draw()
     #win.flip()
+    core.wait(1) #to avoid one click mis-affect the following event
+    #event.clearEvents()
     while True not in (left_press, right_press):
         greyde = 0
         circle.setColor(greyde)
@@ -212,6 +216,7 @@ def pauseclick(text, win, mouse, pos=(0.0, 0.0), height=1.2, color=[1, 1, 1], wr
         message.draw()
         win.flip()
         (left_press,middle_press,right_press)=mouse.getPressed()
+    
 #    while not click:
 #        message.draw()
 #        win.flip()
@@ -220,7 +225,8 @@ def pauseclick(text, win, mouse, pos=(0.0, 0.0), height=1.2, color=[1, 1, 1], wr
 #                click = True
 #                core.wait(0.2)
 
-pauseclick("Press left or right on the mouse to select a shape.\n Try to win as much money as possible! Click either button to start.", win, mouse)
+pauseclick("Click left or right on the mouse to select a shape.\n Try to win as much money as possible!\n Click either button to see the instruction.", win, mouse)
+pauseclick("You will win a real 15 pence every time you choose the shape corresponding to \"win\". \n Try to find the shape with higher probability to \"win\". \n The higher probability might shift to the other shape frome time to time.\n If you are ready, click either button to start. ",win,mouse)
 
 
 #timer for task
@@ -820,7 +826,18 @@ for thistrial in trialhandle:
         elif blocknum==4:
             pauseclick("End of phase! You can now feel free to rest and wait for insturctions.",win,mouse)
             print("User paused the task")
-    
+            pauseclick("Next, you will see both win and loss in one trial, which are independent of each other. \n That means you need to separately learn how outcomes happen at the same time. \n If you are ready, click either button to start the next phase.",win,mouse)
+            print("User paused the task")
+        if blocknum==2:
+            pauseclick("The rules remain the same except that \"win\" is replaced by \"loss\".\nYou will lose a real 15 pence every time you choose the shape corresponding to \"loss\".\n If you are ready, click either button to start.",win,mouse)
+            print("User paused the task")
+        if blocknum==3:
+            pauseclick("In next block, \"win\" and \"loss\" will be replaced by the other every few trials. \n If you are ready, click either button to start.",win,mouse)
+            print("User paused the task")
+        if blocknum==5 or blocknum==6:
+            pauseclick("The rules remain the same except the probability pattern will be changed.\n If you are ready, click either button to start. ",win,mouse)
+            print("User paused the task")
+        
 if usetrack:
 #stop tracker
     tracker.record_off()
