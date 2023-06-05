@@ -9,12 +9,12 @@ end
 winpos = zeros(1,ntrial);
 losspos = zeros(1,ntrial);
 
-
+%%
 triger = 0;
 while triger==0
-    Random = round(1*randn(1,20)+6);
+    Random = round(2*randn(1,17)+7.5);
     if sum(Random)==ntrial && ~any(Random<=2)
-        if ~any(Random(1:10)>7) && ~any(Random(11:19)<6)
+        if ~any(Random(1:8)>7) && ~any(Random(9:16)<7.5)
             triger=1;
         end
     end
@@ -36,6 +36,7 @@ end
 end
 end
 
+%%
 tripro = 0;
 while tripro==0
     proran = round(3*randn(1,10)+12);
@@ -44,9 +45,11 @@ while tripro==0
     end
 end
 
-
-% proran = [13,12,17,17,14,10,10,14,13];
-% Random = [7,8,8,9,18,20,19,23,8];
+%%
+proran = [9,8,14,11,14,10,15,7,17,15];
+Random = [6,6,6,5,4,7,7,6,8,8,8,9,8,10,9,9,4];
+% old proran = [13,12,17,17,14,10,10,14,13];
+% old Random = [7,8,8,9,18,20,19,23,8];
 idxpos = 0;
 pro = 0.15;
 PRO = zeros(1,ntrial);
@@ -69,7 +72,7 @@ if sum(winpos)==ntrial/2 && sum(losspos)==ntrial/2
     CHECK=1;
 end
 end
-
+%%
 
 idxdif = find(order(1:end-1)~=order(2:end));
 plot(80+1:80+idxdif(1), PRO(1:idxdif(1)),'-g','linewidth',3);

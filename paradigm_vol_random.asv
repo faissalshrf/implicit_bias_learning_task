@@ -14,7 +14,7 @@ triger = 0;
 while triger==0
     Random = round(1*randn(1,20)+6);
     if sum(Random)==ntrial && ~any(Random<=2)
-        if ~any(Random(1:10)>7) && ~any(Random(11:19)<6)
+        if ~any(Random(1:10)>10) && ~any(Random(11:8)<18)
             triger=1;
         end
     end
@@ -38,7 +38,7 @@ end
 
 tripro = 0;
 while tripro==0
-    proran = round(3*randn(1,10)+12);
+    proran = round(3*randn(1,9)+13.5);
     if sum(proran)==ntrial
         tripro=1;
     end
