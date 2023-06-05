@@ -97,7 +97,7 @@ ylim([0,1])
 
 
         
-%%
+%% old version (v2 schedule) (update manually)
 
 idxpb = [201:440];
 winPRO = zeros(1,length(idxpb));
@@ -113,7 +113,6 @@ hold on
 plot(idxpb,lossPRO,'--r','linewidth',3);
 
 hold on
-
 
 idxpb = [1:40];
 winPRO = zeros(1,length(idxpb));
@@ -133,8 +132,57 @@ xline(280.5+80,'--k','linewidth',5);
 
 xlim([0,440]);
 
+%% v3 schedule (update manually)
+
+% second block
+idxpb = [241:480];
+winPRO = zeros(1,length(idxpb));
+winPRO([1:13,30:52,181:199,221:240]) = 0.15;
+winPRO([14:29,53:80,161:180,200:220]) = 0.85;
+winPRO([81:160]) = 0.5;
+lossPRO = zeros(1,length(idxpb));
+lossPRO([1:19,50:62,97:111,134:160]) = 0.85;
+lossPRO([20:49,63:96,112:133]) = 0.15;
+lossPRO([161:240]) = 0.5;
+plot(idxpb,winPRO,'-g','linewidth',3);
+hold on
+plot(idxpb,lossPRO,'--r','linewidth',3);
+
+hold on
+
+% first block first part
+idxpb = [1:60];
+winPRO = zeros(1,length(idxpb));
+winPRO([7:12,17:22,31:35,43:49,55:60]) = 0.15;
+winPRO([1:6,13:16,23:30,36:42,50:54]) = 0.85;
+plot(idxpb,winPRO,'-g','linewidth',3);
+lossPRO = zeros(1,length(idxpb));
+lossPRO([8:12,21:26,33:37,4:49,56:60]) = 0.15;
+lossPRO([1:7,13:20,27:32,38:43,50:55]) = 0.85;
+plot(idxpb+60,lossPRO,'--r','linewidth',3);
 
 
+
+%
+changept = [1,6,12,18,23,27,34,41,47,55,63,71,80,88,98,107,116,120];
+for k = 1:length(changept)-1
+    if mod(k,2)==1
+        plot((120+changept(k)):(120+changept(k+1)),PRO(changept(k):changept(k+1)),'-g','linewidth',3);
+    else
+        plot((120+changept(k)):(120+changept(k+1)),PRO(changept(k):changept(k+1)),'--r','linewidth',3);
+    end
+end
+
+
+
+
+xline(60.5,'--k','linewidth',5);
+xline(120.5,'--k','linewidth',5);
+xline(120.5+120,'--k','linewidth',5);
+xline(200.5+120,'--k','linewidth',5);
+xline(280.5+120,'--k','linewidth',5);
+
+xlim([0,480]);
 
 
 
