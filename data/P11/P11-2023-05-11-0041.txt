@@ -1,2 +1,0 @@
-Participant_ID	P11	Block Order	1	Date	2023-05-11-0041
-Trialnumber	Winpos	Losspos	Side	Order	Choice	RT	Choiceside	Winchosen	LossChosen	TotalMoney	Fixonset	Choiceonset	Monitoronset	Winresonset	Lossresonset	stima	stimb	Blocknum

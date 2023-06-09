@@ -1,3 +1,0 @@
-Participant_ID	P11	Block Order	1	Date	2023-05-11-0016
-Trialnumber	Winpos	Losspos	Side	Order	Choice	RT	Choiceside	Winchosen	LossChosen	TotalMoney	Fixonset	Choiceonset	Monitoronset	Winresonset	Lossresonset	stima	stimb	Blocknum
-1	0	0	0	1	0	3.7495477199554443	left	1	-1	1.65	0.6049382999917725	1.6051121999917086	5.35946179999155	6.363810299997567	-1	K	G	1
