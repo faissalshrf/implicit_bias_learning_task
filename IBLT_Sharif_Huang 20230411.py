@@ -31,11 +31,11 @@ import numpy as np
 usetrack=0      # use the eyetracker
 usejitter=0     # jitter timings (e.g. for eye tracker)
 blocklength=[0,0,0]    # number and length of blocks
-leftstimx=-6    # x position left stimulus
-rightstimx=6    # x position right stimulus
+leftstimx=-8    # x position left stimulus
+rightstimx=8    # x position right stimulus
 stimy=0         # y position main stimuli
 outy=3        # y distance between main stimulus and outcome text
-stimsize=2.2    # size of stimuli
+stimsize=3    # size of stimuli
 boxwidth=2    # width of choice box
 fixdur=1        # duration of fixation in secs
 monitordur=1    # duration of monitor in secs
@@ -51,6 +51,7 @@ maxjit=6        # max jitter duration in secs
 stimlets=['F','G','h','K','o','b','f','j','i']      # letters to be used as stimuli
 #stimlets=['F','G']      # letters to be used as stimuli
 blocknum=1      # counter for blocks
+greyde=0        #grey degree of the circle at the top left corner for epoching
 
 
 #if len(stimlets) < len(blocklength)*2:
@@ -60,14 +61,15 @@ blocknum=1      # counter for blocks
 os.chdir(_thisDir)
 
 # Get the current date and format it as a string with the format "YYYY-MM-DD"
-dateStr = time.strftime("%Y-%m-%d", time.localtime())
+dateStr = time.strftime("%Y-%m-%d-%H%M", time.localtime())
 expName = 'IBLT'
 
 # experiment inf
 expInfo = {
     'Participant_ID': 'P00',
     'Block Order':1,
-    'Short?': 'Yes'
+    'Type': '',
+    'dateStr':dateStr
 }
 
 # --- Show participant info dialog --
@@ -78,10 +80,10 @@ expInfo['date'] = data.getDateStr()  # add a simple timestamp
 expInfo['expName'] = expName
 
 # import experiment schedule
-if expInfo['Short?'] == 'Yes':
+if expInfo['Type'] == '1':
     schedulefile = 'Schedule_10.xlsx'
     blocklength=[10,10,10]
-else:
+elif expInfo['Type'] == '2':
     schedulefile = 'Schedule_80.xlsx'
     blocklength=[80,80,80]
 
@@ -144,10 +146,11 @@ win.mouseVisible = True
 stima = visual.TextStim(win,text='a', units='deg', color='white',font='agathodaimon',height=stimsize)
 stimb = visual.TextStim(win,text='b', units='deg', color='white',font='agathodaimon',height=stimsize)
 choicebox = visual.ShapeStim(win, units='deg', lineWidth=4, lineColor=[0.8824, 0.6392, 0.4432], vertices=((-boxwidth, -boxwidth), (-boxwidth, boxwidth), (boxwidth, boxwidth), (boxwidth, -boxwidth)))
-winmes=visual.TextStim(win,text='win',colorSpace='rgb',color=[0.0, 1.0, 0.0])
-lossmes=visual.TextStim(win,text='loss',colorSpace='rgb',color=[1.0, 0.0 ,0.0])
+winmes = visual.TextStim(win,text='win',colorSpace='rgb',color=[0.0, 1.0, 0.0])
+lossmes = visual.TextStim(win,text='loss',colorSpace='rgb',color=[1.0, 0.0 ,0.0])
 fixation = visual.TextStim(win,text='X',color='white')
-tottext=visual.TextStim(win,text=u'Total \xa3'+ str(totmon),units='deg', colorSpace='rgb', color=[0.8824, 0.6392, 0.4432],height=1, pos=(0.0,-5.5))
+tottext = visual.TextStim(win,text=u'Total \xa3'+ str(round(totmon,2)),units='deg', colorSpace='rgb', color=[0.8824, 0.6392, 0.4432],height=1, pos=(0.0,-5.5))
+circle = visual.Circle(win, units='deg', radius=3, pos=(-28.5,18), colorSpace='rgb255', color=greyde)
 
 #Initiate eye-tracker link and open EDF
 if usetrack:
@@ -184,20 +187,31 @@ def pauseclick(text, win, mouse, pos=(0.0, 0.0), height=1.2, color=[1, 1, 1], wr
         height (float): The height of the text stimulus in visual degrees.
         color (list): The color of the text stimulus as an RGB triplet (values between 0 and 1).
     """
-    click = False
+    #click = False
+    left_press=False
+    right_press=False
     win.setColor('black')
     text = re.sub(r'(?<=[.!]) +', '\n\n', text) # add line breaks after periods and exclamation points
     wrapped_text = "\n".join(textwrap.wrap(text, width=wrap_width))
     message = visual.TextStim(win=win, text=wrapped_text, pos=pos, height=height, color=color)
-    while not click:
+    #message.draw()
+    #win.flip()
+    while True not in (left_press, right_press):
+        greyde = 0
+        circle.setColor(greyde)
+        circle.draw()
         message.draw()
         win.flip()
-        buttons = mouse.getPressed()
-        if buttons[0] or buttons[1]:
-                click = True
-                core.wait(0.2)
+        (left_press,middle_press,right_press)=mouse.getPressed()
+#    while not click:
+#        message.draw()
+#        win.flip()
+#        buttons = mouse.getPressed()
+#        if buttons[0] or buttons[1]:
+#                click = True
+#                core.wait(0.2)
 
-pauseclick("Press left or right on the mouse to select a shape. Try to win as much money as possible! Click either button to start.", win, mouse)
+pauseclick("Press left or right on the mouse to select a shape.\n Try to win as much money as possible! Click either button to start.", win, mouse)
 
 
 #timer for task
@@ -230,7 +244,10 @@ for thistrial in trialhandle:
     
     trialhandle.data.add('stima',stima.text)
     trialhandle.data.add('stimb',stimb.text)
-    # present fixation cross for 500ms
+    # present fixation cross for 1000ms (original one is 500ms)
+    greyde = 40
+    circle.setColor(greyde)
+    circle.draw()
     fixation.draw()
     tottext.draw()
     fixonset=taskclock.getTime()
@@ -249,6 +266,9 @@ for thistrial in trialhandle:
         stimb.setPos([leftstimx,stimy])
         stima.setPos([rightstimx,stimy])
         
+    greyde = 80
+    circle.setColor(greyde)
+    circle.draw()
     fixation.draw()
     tottext.draw()
     stima.draw()
@@ -340,6 +360,9 @@ for thistrial in trialhandle:
         
     # present participant choice
   
+    greyde = 120
+    circle.setColor(greyde)
+    circle.draw()
     fixation.draw()
     tottext.draw()
     choicebox.draw()
@@ -370,7 +393,9 @@ for thistrial in trialhandle:
                 winmes.setPos([rightstimx,outy])
             else:
                 winmes.setPos([leftstimx,outy])    #option 1 on right
-        
+        greyde = 160
+        circle.setColor(greyde)
+        circle.draw()
         fixation.draw()
         tottext.draw()
         choicebox.draw()
@@ -406,7 +431,9 @@ for thistrial in trialhandle:
             else:                                   #option 1 on right
                 lossmes.setPos([leftstimx,-outy])
             
-        
+        greyde = 200
+        circle.setColor(greyde)
+        circle.draw()        
         fixation.draw()
         tottext.draw()
         choicebox.draw()
@@ -444,7 +471,10 @@ for thistrial in trialhandle:
                 lossmes.setPos([rightstimx,-outy])
             else:                                   #option 1 on right
                 lossmes.setPos([leftstimx,-outy])
-        
+
+        greyde = 200
+        circle.setColor(greyde)
+        circle.draw()
         fixation.draw()
         tottext.draw()
         choicebox.draw()
@@ -480,6 +510,9 @@ for thistrial in trialhandle:
             else:
                 winmes.setPos([leftstimx,outy])    #option 1 on right
         
+        greyde = 160
+        circle.setColor(greyde)
+        circle.draw()        
         fixation.draw()
         tottext.draw()
         choicebox.draw()
@@ -509,7 +542,7 @@ for thistrial in trialhandle:
     # write data to a file at the end of each trial to make sure nothing is lost 
     td=trialhandle.data
     writeToFile(dataFile,list([int(td['Trialnumber'][ntrial]),Sched[ntrial]['winpos'],Sched[ntrial]['losspos'],Sched[ntrial]['side'],Sched[ntrial]['order'],
-    int(td['Choice'][ntrial]),float(td['RT'][ntrial]),"".join(td['Choiceside'][ntrial]),int(td['Winchosen'][ntrial]),int(td['Losschosen'][ntrial]),totmon,
+    int(td['Choice'][ntrial]),float(td['RT'][ntrial]),"".join(td['Choiceside'][ntrial]),int(td['Winchosen'][ntrial]),int(td['Losschosen'][ntrial]),round(totmon,2),
     fixonset,choiceonset,monitoronset,winresonset,lossresonset,stima.text,stimb.text,blocknum]))
     
     ntrial+=1

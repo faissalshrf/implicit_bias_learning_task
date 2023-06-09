@@ -152,3 +152,4 @@ cython_debug/
 #.idea/
 original_folder/.DS_Store
 .DS_Store
+*.txt
