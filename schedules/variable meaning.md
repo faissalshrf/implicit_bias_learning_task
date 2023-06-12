@@ -21,5 +21,7 @@ B  x  A  ->  B  x  A  ->  B  x  A
                    L                L
 
 block order: swap the "winpos" and "losspos" columns in the schedule file, thus swapping the volatility/stability of "win" and "loss" at the last three blocks.
+	Block order=1: 5th block: loss-volatile, win-stable; 6th block: win-volatile, loss-stable
+	Block order=2: 5th block: win-volatile, loss-stable; 6th block: loss-volatile, win-stable
 
 
