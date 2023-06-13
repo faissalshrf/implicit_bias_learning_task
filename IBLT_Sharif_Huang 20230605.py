@@ -14,7 +14,6 @@ from numpy import (sin, cos, tan, log, log10, pi, average,
                    sqrt, std, deg2rad, rad2deg, linspace, asarray)
 from numpy.random import random, randint, normal, shuffle, choice as randchoice
 from psychopy.hardware import keyboard
-
 import os
 import sys
 import time
@@ -23,6 +22,7 @@ import random
 import textwrap
 import re
 import numpy as np
+import sounddevice, soundfile
 
 
 # update march 2018-- include control variables which switch tracker on or off, use jitter or not for outcomes, control length of blocks
