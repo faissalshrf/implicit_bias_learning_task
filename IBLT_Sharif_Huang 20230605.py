@@ -866,6 +866,6 @@ if usetrack:
 trialhandle.saveAsText(os.path.join(data_dir, filename), dataOut=['Choice_raw', 'Choiceside_raw','RT_raw', 'Winchosen_raw','Losschosen_raw'])
 
 
-pauseclick("Thank you!", win, mouse)
+pauseclick("Thank you!\n The total money you earn is \xa3"+ str(round(totmon,2)), win, mouse)
 win.close()
 core.quit()
