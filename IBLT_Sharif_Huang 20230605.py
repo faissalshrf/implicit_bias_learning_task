@@ -22,7 +22,8 @@ import random
 import textwrap
 import re
 import numpy as np
-import sounddevice, soundfile
+#import sounddevice, soundfile
+#import psychopy-sounddevice
 
 
 # update march 2018-- include control variables which switch tracker on or off, use jitter or not for outcomes, control length of blocks
@@ -37,8 +38,8 @@ stimy=0         # y position main stimuli
 outy=3        # y distance between main stimulus and outcome text
 stimsize=3    # size of stimuli
 boxwidth=2    # width of choice box
-fixdur=1        # duration of fixation in secs
-monitordur=1    # duration of monitor in secs
+fixdur=0.5        # duration of fixation in secs
+monitordur=0.5    # duration of monitor in secs
 outcomedur1=1   # duration of first outcome in secs (if not jittered) (previously 1)
 outcomedur2=1   # duration of second outcome in secs (if not jittered) (previously 1)
 totmon=1.5      # starting amount of money
@@ -211,7 +212,7 @@ def pauseclick(text, win, mouse, pos=(0.0, 0.0), height=1.2, color=[1, 1, 1], wr
         message.append(visual.TextStim(win=win, text=line, pos=(pos[0], y_pos), height=height, color=color))
         y_pos -= line_height
 
-    core.wait(1)  # To avoid one click affecting the following event
+    core.wait(0.8)  # To avoid one click affecting the following event
     while True not in (left_press, right_press):
         greyde = 0
         circle.setColor(greyde)
@@ -220,6 +221,7 @@ def pauseclick(text, win, mouse, pos=(0.0, 0.0), height=1.2, color=[1, 1, 1], wr
             line.draw()
         win.flip()
         (left_press, middle_press, right_press) = mouse.getPressed()
+    #core.wait(0.2)
 
 
     
@@ -250,6 +252,8 @@ ntrial=0
 #for indtrial in range(0,10):
 for thistrial in trialhandle:
     #thistrial=trialhandle.next()
+    winsound=sound.Sound(os.path.join(_thisDir, 'stimuli','cha_ching.wav'))
+    losssound=sound.Sound(os.path.join(_thisDir,'stimuli','error2.wav'))
     
     #part A
     if blocknum<=len(blocklength)-3:
@@ -268,7 +272,7 @@ for thistrial in trialhandle:
         
         trialhandle.data.add('stima',stima.text)
         trialhandle.data.add('stimb',stimb.text)        
-        # present fixation cross for 1000ms (original one is 500ms)
+        # present fixation cross for 500ms
         greyde = 40
         circle.setColor(greyde)
         circle.draw()
