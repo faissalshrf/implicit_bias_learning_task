@@ -1,6 +1,6 @@
 # IBLT Paradigm
 
-This readme provides instructions for setting up and running the "PsychoPy" software along with the "voltrain_march18.py" code. The following steps outline the process:
+This readme provides instructions for setting up and running the "PsychoPy" software along with the "IBLT_Sharif_Huang.py" code. The following steps outline the process:
 
 1. Double-click on "PsychoPy" to open the software.
 2. Add the path for "pylinkwrapper" in the preferences:
