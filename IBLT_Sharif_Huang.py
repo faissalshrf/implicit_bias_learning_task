@@ -14,7 +14,6 @@ from numpy import (sin, cos, tan, log, log10, pi, average,
                    sqrt, std, deg2rad, rad2deg, linspace, asarray)
 from numpy.random import random, randint, normal, shuffle, choice as randchoice
 from psychopy.hardware import keyboard
-
 import os
 import sys
 import time
@@ -23,6 +22,8 @@ import random
 import textwrap
 import re
 import numpy as np
+#import sounddevice, soundfile
+#import psychopy-sounddevice
 
 
 # update march 2018-- include control variables which switch tracker on or off, use jitter or not for outcomes, control length of blocks
@@ -37,8 +38,8 @@ stimy=0         # y position main stimuli
 outy=3        # y distance between main stimulus and outcome text
 stimsize=3    # size of stimuli
 boxwidth=2    # width of choice box
-fixdur=1        # duration of fixation in secs
-monitordur=1    # duration of monitor in secs
+fixdur=0.5        # duration of fixation in secs
+monitordur=0.5    # duration of monitor in secs
 outcomedur1=1   # duration of first outcome in secs (if not jittered) (previously 1)
 outcomedur2=1   # duration of second outcome in secs (if not jittered) (previously 1)
 totmon=1.5      # starting amount of money
@@ -48,7 +49,7 @@ winsound=sound.Sound(os.path.join(_thisDir, 'stimuli','cha_ching.wav'))   # soun
 losssound=sound.Sound(os.path.join(_thisDir,'stimuli','error2.wav'))     # sound to play on loss
 minjit=2        # min jitter duration in secs
 maxjit=6        # max jitter duration in secs
-stimlets=['F','G','h','K','o','b','f','j','i']      # letters to be used as stimuli
+stimlets=['F','G','h','K','o','j','f','i','c','e','s','y']      # letters to be used as stimuli
 #stimlets=['F','G']      # letters to be used as stimuli
 blocknum=1      # counter for blocks
 greyde=0        #grey degree of the circle at the top left corner for epoching
@@ -61,15 +62,14 @@ greyde=0        #grey degree of the circle at the top left corner for epoching
 os.chdir(_thisDir)
 
 # Get the current date and format it as a string with the format "YYYY-MM-DD"
-dateStr = time.strftime("%Y-%m-%d-%H%M", time.localtime())
+dateStr = time.strftime("%Y_%m_%d", time.localtime())
 expName = 'IBLT'
 
 # experiment inf
 expInfo = {
-    'Participant_ID': 'P00',
-    'Block Order':1,
-    'Type': '',
-    'dateStr':dateStr
+    'Participant_ID': 'S00',
+    'Block Order':['A','B'],
+    'Type': ['Standard','Shortened','Test'],
 }
 
 # --- Show participant info dialog --
@@ -80,12 +80,15 @@ expInfo['date'] = data.getDateStr()  # add a simple timestamp
 expInfo['expName'] = expName
 
 # import experiment schedule
-if expInfo['Type'] == '1':
-    schedulefile = 'ScheduleNew.xlsx'
-    blocklength=[60,120,80,80,80]
-elif expInfo['Type'] == '2':
+if expInfo['Type'] == 'Standard':
+    schedulefile = 'ScheduleNew_v3.xlsx'
+    blocklength=[60,60,120,80,80,80]
+elif expInfo['Type'] == 'Shortened':
     schedulefile = 'ScheduleNew_v2.xlsx'
     blocklength=[40,40,120,80,80,80]
+elif expInfo['Type'] == 'Test':
+    schedulefile = 'ScheduleNew_short.xlsx'
+    blocklength=[5,5,15,10,10,10]
 
 
 Sched = data.importConditions(os.path.join(_thisDir, 'schedules', schedulefile))
@@ -95,7 +98,7 @@ if sum(blocklength) != len(Sched):
 #edit this line above to short_version to run only 10 lines
 #should normally be 2_opt_linked_80_10
 #Block order 2 swaps winpos and losspos in schedule file!
-if expInfo['Block Order']==2:
+if expInfo['Block Order']=='B':
     wp=[d['winpos'] for d in Sched]
     lp=[d['losspos'] for d in Sched]
     for a in range(0,Sched.__len__()):
@@ -107,8 +110,8 @@ if expInfo['Block Order']==2:
 # Data file name stem = absolute path + name; later add .psyexp, .csv, .log, etc
 #make a text file to save data
 # create the filename and data directory
-filename = f"{expInfo['Participant_ID']}-{dateStr}.txt"
-data_dir = os.path.join(_thisDir, 'data', expInfo['Participant_ID'])
+filename = f"IBLT_{expInfo['Participant_ID']}_{dateStr}_{expInfo['Type']}.txt"
+data_dir = os.path.join(_thisDir, 'data', f"IBLT_{expInfo['Participant_ID']}_{dateStr}")
 
 if not os.path.exists(data_dir):
     os.makedirs(data_dir)
@@ -151,7 +154,9 @@ winmes = visual.TextStim(win,text='win',colorSpace='rgb',color=[0.0, 1.0, 0.0])
 lossmes = visual.TextStim(win,text='loss',colorSpace='rgb',color=[1.0, 0.0 ,0.0])
 fixation = visual.TextStim(win,text='X',color='white')
 tottext = visual.TextStim(win,text=u'Total \xa3'+ str(round(totmon,2)),units='deg', colorSpace='rgb', color=[0.8824, 0.6392, 0.4432],height=1, pos=(0.0,-5.5))
-circle = visual.Circle(win, units='deg', radius=3, pos=(-28.5,18), colorSpace='rgb255', color=greyde)
+#circle = visual.Circle(win, units='deg', radius=3, pos=(-28.5,18), colorSpace='rgb255', color=greyde) # for 2160x1440 monitor
+#circle = visual.Circle(win, units='norm', radius=0.1, pos=(-0.9,0.9), colorSpace='rgb255', color=greyde)
+circle = visual.Circle(win, units='deg', radius=3, pos=(-27,15), colorSpace='rgb255', color=greyde) #for 1920x1080 monitor
 
 #Initiate eye-tracker link and open EDF
 if usetrack:
@@ -174,8 +179,8 @@ stimb.setText(stimlets[stimcount+1])
 mouse = event.Mouse(visible=False, newPos=None, win=win)
 
 
-#display instructions and wait
-def pauseclick(text, win, mouse, pos=(0.0, 0.0), height=1.2, color=[1, 1, 1], wrap_width=100):
+
+def pauseclick(text, win, mouse, pos=(0.0, 0.0), height=1.2, color=[1, 1, 1], wrap_width=800, line_spacing=1.2):
     """
     A function that displays a message and waits for the participant to click
     either button before continuing.
@@ -187,23 +192,38 @@ def pauseclick(text, win, mouse, pos=(0.0, 0.0), height=1.2, color=[1, 1, 1], wr
         pos (tuple): The position of the text stimulus (default is the center of the screen).
         height (float): The height of the text stimulus in visual degrees.
         color (list): The color of the text stimulus as an RGB triplet (values between 0 and 1).
+        wrap_width (int): The maximum width of each line of text.
+        line_spacing (float): The vertical spacing between lines.
     """
-    #click = False
-    left_press=False
-    right_press=False
+    left_press = False
+    right_press = False
+    mouse.clickReset()
     win.setColor('black')
-    text = re.sub(r'(?<=[.!]) +', '\n\n', text) # add line breaks after periods and exclamation points
-    wrapped_text = "\n".join(textwrap.wrap(text, width=wrap_width))
-    message = visual.TextStim(win=win, text=wrapped_text, pos=pos, height=height, color=color)
-    #message.draw()
-    #win.flip()
+
+    # Wrap the text at the specified width
+    wrapped_text = textwrap.fill(text, wrap_width)
+    lines = wrapped_text.split('\n')
+    line_height = height * line_spacing
+    y_pos = pos[1] + (len(lines) - 1) * line_height / 2
+
+    message = []
+    for line in lines:
+        message.append(visual.TextStim(win=win, text=line, pos=(pos[0], y_pos), height=height, color=color))
+        y_pos -= line_height
+
+    core.wait(0.8)  # To avoid one click affecting the following event
     while True not in (left_press, right_press):
         greyde = 0
         circle.setColor(greyde)
         circle.draw()
-        message.draw()
+        for line in message:
+            line.draw()
         win.flip()
-        (left_press,middle_press,right_press)=mouse.getPressed()
+        (left_press, middle_press, right_press) = mouse.getPressed()
+    #core.wait(0.2)
+
+
+    
 #    while not click:
 #        message.draw()
 #        win.flip()
@@ -212,14 +232,16 @@ def pauseclick(text, win, mouse, pos=(0.0, 0.0), height=1.2, color=[1, 1, 1], wr
 #                click = True
 #                core.wait(0.2)
 
-pauseclick("Press left or right on the mouse to select a shape.\n Try to win as much money as possible! Click either button to start.", win, mouse)
-
+pauseclick("In the following task, you will see a series of pairs of shapes appearing. Left-click to continue.", win, mouse)
+pauseclick("Left- or right-click with the mouse on a shape to select it (left-click for left shape, right-click for right shape).", win, mouse)
+pauseclick("Depending on the shape you select, you may or may not earn money.", win, mouse)
+pauseclick("Your goal is to earn as much money as possible, which you will receive at the end of the experiment.", win, mouse)
+pauseclick("The probability in which a given shape will \"win\" may change. If you are ready, left-click the mouse to start.", win, mouse)
 
 #timer for task
 taskclock=core.Clock()
 taskclock.reset()
 trialhandle=data.TrialHandler(Sched, nReps=1, method='sequential', dataTypes=trialdat, extraInfo=None, seed=None, originPath=None, name='', autoLog=True)
-
 
 
 #start tracker
@@ -229,6 +251,8 @@ ntrial=0
 #for indtrial in range(0,10):
 for thistrial in trialhandle:
     #thistrial=trialhandle.next()
+    winsound=sound.Sound(os.path.join(_thisDir, 'stimuli','cha_ching.wav'))
+    losssound=sound.Sound(os.path.join(_thisDir,'stimuli','error2.wav'))
     
     #part A
     if blocknum<=len(blocklength)-3:
@@ -247,7 +271,7 @@ for thistrial in trialhandle:
         
         trialhandle.data.add('stima',stima.text)
         trialhandle.data.add('stimb',stimb.text)        
-        # present fixation cross for 1000ms (original one is 500ms)
+        # present fixation cross for 500ms
         greyde = 40
         circle.setColor(greyde)
         circle.draw()
@@ -802,13 +826,38 @@ for thistrial in trialhandle:
         
     ntrial+=1
     if any(map(lambda x: ntrial == x, np.cumsum(blocklength[:-1]))):
-        blocknum+=1
-        stimcount=stimcount+2
+        blocknum += 1
+        stimcount = stimcount + 2
         stima.setText(stimlets[stimcount])
-        stimb.setText(stimlets[stimcount+1])
-        pauseclick("Well done! You can now take a break. Press either button to continue.", win, mouse)
-        print("User paused the task")
-    
+        stimb.setText(stimlets[stimcount + 1])
+        if blocknum == 2:
+            pauseclick("Well done! Feel free to take a break. Left-click to continue.", win, mouse)
+            pauseclick("The rules remain the same except that depending on the shape you select, you may or may not lose money.", win, mouse)
+            pauseclick("The probability in which a given shape will \"lose\" may change.", win, mouse)
+            pauseclick("If you are ready, left-click the mouse to start.", win, mouse)
+            print("User paused the task")
+        elif blocknum == 3:
+            pauseclick("Well done! Feel free to take a break. Left-click to continue.", win, mouse)
+            pauseclick("This time, depending on the shape you select, you may win or lose money.", win, mouse)
+            pauseclick("The probability in which a given shape will \"win\" or \"lose\" may change.", win, mouse)
+            pauseclick("If you are ready, left-click the mouse to start.", win, mouse)
+            print("User paused the task")
+        elif blocknum == 4:
+            pauseclick("End of phase! Please wait for instructions. Do not press anything.", win, mouse)
+            print("User paused the task")
+            pauseclick("Again, depending on the shape you select, you may win or lose money.", win, mouse)
+            pauseclick("However, a shape may only \"win\", only \"lose\" or \"win\" and \"lose\" at the same time. When that happens, the win and loss cancel each other out and you earn nothing.", win, mouse)
+            pauseclick("The probability in which a given shape will \"win\" or \"lose\" may change.", win, mouse)
+            pauseclick("If you are ready, left-click the mouse to start.", win, mouse)
+            print("User paused the task")
+        elif blocknum == 5 or blocknum == 6:
+            pauseclick("Well done! Feel free to take a break. Left-click to continue.", win, mouse)
+            pauseclick("The rules remain the same as in the previous task.\n If you are ready, left-click to start. ", win, mouse)
+            print("User paused the task")
+        else:
+            pauseclick("Well done! Feel free to take a break. Left-click to continue.", win, mouse)
+            print("User paused the task")
+
 if usetrack:
 #stop tracker
     tracker.record_off()
@@ -820,6 +869,6 @@ if usetrack:
 trialhandle.saveAsText(os.path.join(data_dir, filename), dataOut=['Choice_raw', 'Choiceside_raw','RT_raw', 'Winchosen_raw','Losschosen_raw'])
 
 
-pauseclick("Thank you!", win, mouse)
+pauseclick("The task is over, thank you!\n The total money you earn is \xa3"+ str(round(totmon,2)), win, mouse)
 win.close()
 core.quit()
