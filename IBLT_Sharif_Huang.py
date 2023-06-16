@@ -110,7 +110,7 @@ if expInfo['Block Order']=='B':
 # Data file name stem = absolute path + name; later add .psyexp, .csv, .log, etc
 #make a text file to save data
 # create the filename and data directory
-filename = f"IBLT_{expInfo['Participant_ID']}_{dateStr}_{expInfo['Type']}.txt"
+filename = f"IBLT_{expInfo['Participant_ID']}_{dateStr}_{expInfo['Type']}_{expInfo['Block Order']}.txt"
 data_dir = os.path.join(_thisDir, 'data', f"IBLT_{expInfo['Participant_ID']}_{dateStr}")
 
 if not os.path.exists(data_dir):
