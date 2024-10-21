@@ -1,66 +1,105 @@
-# IBLT Paradigm
+# Implicit Bias Learning Task (IBLT)
 
-This readme provides instructions for setting up and running the "PsychoPy" software along with the "IBLT_Sharif_Huang.py" code. The following steps outline the process:
+##  Overview
+The IBLT is a probabilistic learning task where participants aim to maximize monetary rewards across **480 trials** and **6 phases**. Participants are presented with two shapes, selecting between them to either win (+£0.15), lose (-£0.15), or neither (±£0.00). The probabilistic characteristics of these wins and losses are manipulated during each phase. All of these metrics can be adjusted in the code and the schedule files.
 
-1. Double-click on "PsychoPy" to open the software.
-2. Add the path for "pylinkwrapper" in the preferences:
-   - Go to Builder > File > Preference > General > Path.
-   - Add the path of "pylinkwrapper" (e.g., "D:\RL\psychopy\pylinkwrapper").
-   - Apply the changes and confirm.
-3. Open the code:
-   - Go to Runner > File > Add.
-   - Open "IBLT_Sharif_Huang.py".
-   
-Now, you should see the file appear in the Runner window. Double-clicking the file will open the Coder, displaying the code. Make sure to install all the packages mentioned in the code.
+- **Learning Objective**: Participants associate choices with a reward and/or loss and adapt behavior when previously learned reward patterns are reversed.
+- **Reversal Learning**: Demands participants to adapt to changing reward/loss patterns across phases, generating prediction errors when outcomes are not as expected.
 
-If everything is set up correctly, follow these steps to run the code and see the experiment interface:
+</br>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/158cfa23-fdf2-44cf-bf70-9a8f629a7949" alt="IBLT2" height="300"/>
+</p>
+</br>
 
-1. Click on Coder > Run Experiment.
-2. The experiment interface will appear.
 
-In the experiment, participants are asked to click the left or right button to choose the corresponding symbol. You can modify various parameters listed in the first few lines of the code. Some examples of parameters you can change are:
+## Phases and Trials
+- **Total Trials**: 480
+- **Phases**: 6 (80 trials per phase)
+- **Shape Alternation**: Shapes alternate left-right positions randomly across trials.
 
-- `totmon/winloss`: Adjusts the stimulation strength.
-- `outcomedur1/2`: Controls the experiment and waiting time.
-- `winpos`: Indicates the symbol connected with "win".
-  - Setting `winpos=1` connects "stima" with "win".
-  - Setting `winpos=0` connects "stimb" with "win".
-- `losspos`: Indicates the symbol connected with "loss".
-  - Setting `losspos=1` connects "stima" with "loss".
-  - Setting `losspos=0` connects "stimb" with "loss".
-- `side`: Indicates the side at which the symbol is presented on the screen.
-  - Setting `side=1` presents "stima" on the left side and "stimb" on the right side.
-  - Setting `side=0` presents the two stim symbols on opposite sides.
-- `order`: Indicates the order of presenting "win" and/or "loss".
-  - For the first three blocks, `order=1` means only "win" is presented, while `order=0` means only "loss" is presented.
-  - For the last three blocks, `order=1` means "win" is presented first, while `order=0` means "loss" is presented first.
+Each shape has a phase-specific probability of winning or losing, which may be **stable** (50%) or **volatile** (15%-85%). These probabilities switch after a minimum of 4 trials to enhance learning of perceived patterns and elicit prediction errors.
 
-Here's an example illustrating the symbol placement based on different parameter values:
+### Probabilistic Evolution
+- **Stable Phases**: Win/Loss probabilities remain fixed at 50%.
+- **Volatile Phases**: Win/Loss probabilities fluctuate between 15% and 85%, forcing participants to adapt their learning patterns.
+</br>
 
-- If `winpos=1`, `losspos=0`, `side=1`, and `order=0`:
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/fa5dd8aa-726e-4198-99b1-a905493ee0a3" alt="IBLT" height="300"/>
+</p>
+</br>
 
-```
-             W 
-A  x  B  ->  A  x  B  ->  A  x  B 
-                   L            L
-```
 
-- If `winpos=1`, `losspos=0`, `side=0`, and `order=0`:
+## Folder Structure
+- **/data/**: Contains participant data from the experiment.
+- **/schedules/**: Contains Excel files that dictate the trial sequences and conditions.
+  - `ScheduleNew_short.xlsx`: Short version of the schedule.
+  - `ScheduleNew_v2.xlsx`: Alternative schedule.
+  - `ScheduleNew_v3.xlsx`: Latest version of the schedule.
+- **/matlab/**: Contains MATLAB scripts, if applicable.
+- **/pylinkwrapper/**: Files related to interfacing with eye-tracking.
+- **/stimuli/**: Contains images of the shapes used in the task.
 
-```
-             W 
-B  x  A  ->  B  x  A  ->  B  x  A 
-                   L            L
-```
 
-The "block order" parameter swaps the "winpos" and "losspos" columns in the schedule file, resulting in a swap of volatility/stability for "win" and "loss" in the last three blocks. Two possible block orders are:
+## Setting Up and Running the Task
+1. **Open PsychoPy**:
+   - Double-click to launch the software.
 
-- Block order A:
+2. **Add the pylinkwrapper Path**:
+   - Go to **Builder > File > Preferences > General > Path**.
+   - Add the path to the `pylinkwrapper` folder (e.g., `"D:\RL\psychopy\pylinkwrapper"`).
+   - Apply changes and confirm.
+
+3. **Open the IBLT Code**:
+   - In **Runner > File > Add**, select `IBLT_Sharif_Huang.py`.
+   - The code will appear in the Runner window.
+
+4. **Install Dependencies**:
+   - Ensure all necessary packages listed in the Python code are installed.
+
+5. **Run the Experiment**:
+   - Click **Coder > Run Experiment** to start the task.
+
+## Customizing Parameters
+You can modify several parameters within the code to adjust the task settings:
+- **totmon**: Adjusts the initial monetary value.
+- **winpos**: Determines which symbol is associated with a win.
+  - `winpos=1`: Associates "stima" with a win.
+  - `winpos=0`: Associates "stimb" with a win.
+- **losspos**: Determines which symbol is associated with a loss.
+  - `losspos=1`: Associates "stima" with a loss.
+  - `losspos=0`: Associates "stimb" with a loss.
+- **side**: Controls which side the shapes appear on.
+  - `side=1`: "stima" on the left, "stimb" on the right.
+  - `side=0`: "stimb" on the left, "stima" on the right.
+- **order**: Defines the order of presenting win/loss outcomes.
+  - `order=1`: Win presented first.
+  - `order=0`: Loss presented first.
+
+### Block Orders
+Two block orders (A and B) are available, which swap win/loss conditions in the final phases:
+- **Block Order A**: 
   - 5th block: loss-volatile, win-stable.
   - 6th block: win-volatile, loss-stable.
-  
-- Block order B:
+- **Block Order B**:
   - 5th block: win-volatile, loss-stable.
   - 6th block: loss-volatile, win-stable.
 
-Please make sure to refer to the code and relevant documentation for further details and instructions.
+
+## Task Dynamics
+
+### Learning Process
+Participants are asked to maximize their monetary gains by learning the win/loss patterns across 6 phases. Each phase presents shapes with probabilistic win/loss outcomes, which can be stable or volatile, and participants must adapt their choices based on the evolving conditions. Sudden switches in probability enhance learning and prediction error measurement.
+
+### Prediction Errors
+- **Positive Prediction Error**: Occurs when an expected loss turns into a win.
+- **Negative Prediction Error**: Occurs when an expected win turns into a loss.
+- Participants' attention to these prediction errors influences their learning rate, particularly for loss patterns, which may be more pronounced in negative affective biases.
+
+## Additional Information
+- This version of the IBLT is based on the design by [Pulcu & Browning (2017)](https://pmc.ncbi.nlm.nih.gov/articles/PMC5633345/) and adapted for this experiment.
+- The task is programmed in PsychoPy 2023.1.1.
+
+## Contact
+For questions or issues regarding the experiment, please contact [**Faissal Sharif**](mailto:faissal.sharif@stx.ox.ac.uk).
